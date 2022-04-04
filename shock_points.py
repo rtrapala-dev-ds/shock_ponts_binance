@@ -1,4 +1,4 @@
-import conf
+import config
 import time
 
 from binance.futures import Futures
@@ -12,7 +12,8 @@ def get_ticker_symbol():
     Returns the ticker symbol in upper case
     '''
     ticker_symbol = input("Ingresa el ticker symbol -> ")
-    return ticker_symbol.upper()
+    decimals = input("Ingresa cantidad de decimales -> ")
+    return ticker_symbol.upper(), int(decimals)
 
 
 def get_client():
@@ -37,7 +38,7 @@ def get_order_book(client, ticker):
         print(e)
 
 
-def get_shock_points(bids, asks):
+def get_shock_points(bids, asks, decimals):
     '''
     buy = [maximo, mmedio, minimo], 0,1,2
     sell = [maximo, mmedio, minimo], 0,1,2
@@ -47,6 +48,7 @@ def get_shock_points(bids, asks):
 
     for l in bids:
         cantidad_libro = float(l[1])
+        
         if cantidad_libro >= float(buy[0][1]): #cantidad libro >= cantidad máxima
             buy[2] = buy[1] #la cant minima ahora es la que era la media
             buy[1] = buy[0] #la cant media ahora es la que era la máxima
@@ -62,6 +64,7 @@ def get_shock_points(bids, asks):
 
     for l in asks:
         cantidad_libro = float(l[1])
+
         if cantidad_libro >= float(sell[0][1]): #cantidad libro >= cantidad máxima
             sell[2] = sell[1] #la cant minima ahora es la que era la media
             sell[1] = sell[0] #la cant media ahora es la que era la máxima
@@ -80,23 +83,23 @@ def get_shock_points(bids, asks):
 
 def run():
     client = get_client()
-    ticker = get_ticker_symbol()
+    ticker, decimals = get_ticker_symbol()
     bids, asks = get_order_book(client, ticker)
-    buy, sell = get_shock_points(bids, asks)
+    buy, sell = get_shock_points(bids, asks, decimals)
     print('\n')
     print(f'{"*" * 45}')
     print(f'{" "*15}SHOCK POINTS{" "*15}')
     print(f'{"*" * 45}')
     print('\n')
     print(f'Venta:')
-    print(f'1- Precio: {sell[0][0]}, cantidad: {sell[0][1]}')
-    print(f'2- Precio: {sell[1][0]}, cantidad: {sell[1][1]}')
-    print(f'3- Precio: {sell[2][0]}, cantidad: {sell[2][1]}')
+    print(f'1- Precio: {round(float(sell[0][0]),decimals)}, cantidad: {sell[0][1]}')
+    print(f'2- Precio: {round(float(sell[1][0]),decimals)}, cantidad: {sell[1][1]}')
+    print(f'3- Precio: {round(float(sell[2][0]),decimals)}, cantidad: {sell[2][1]}')
     print('\n')
     print(f'Compra:')
-    print(f'1- Precio: {buy[0][0]}, cantidad: {buy[0][1]}')
-    print(f'2- Precio: {buy[1][0]}, cantidad: {buy[1][1]}')
-    print(f'3- Precio: {buy[2][0]}, cantidad: {buy[2][1]}')
+    print(f'1- Precio: {round(float(buy[0][0]),decimals)}, cantidad: {buy[0][1]}')
+    print(f'2- Precio: {round(float(buy[1][0]),decimals)}, cantidad: {buy[1][1]}')
+    print(f'3- Precio: {round(float(buy[2][0]),decimals)}, cantidad: {buy[2][1]}')
     
     
     print('\n')
