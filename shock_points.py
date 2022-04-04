@@ -1,4 +1,4 @@
-import config
+import conf
 import time
 
 from binance.futures import Futures
