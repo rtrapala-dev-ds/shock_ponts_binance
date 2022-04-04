@@ -1,4 +1,4 @@
-import conf
+import config
 import time
 
 from binance.futures import Futures
@@ -19,7 +19,7 @@ def get_client():
     '''
     Connect to the Binance Futures API to the account and retunrs that conection
     '''
-    return Futures(key = conf.API_KEY, secret = conf.API_SECRET)
+    return Futures(key = config.API_KEY, secret = config.API_SECRET)
 
 
 def get_best_ask_bid(client, ticker):
